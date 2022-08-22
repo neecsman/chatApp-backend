@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { Messages, Users, Dialogs } from "./entity";
+import { Messages, Users, Dialogs, Token } from "./entity";
 
 //Database
 export const AppDataSource = new DataSource({
@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: "postgres",
   password: "admin",
   database: "chat",
-  entities: [Messages, Users, Dialogs],
+  entities: [Messages, Users, Dialogs, Token],
   synchronize: true,
   logging: false,
 });

@@ -2,20 +2,17 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from "typeorm";
-import { Users } from "./index";
+import { Users, Messages } from "./index";
 
 @Entity()
 export default class Dialogs {
   @PrimaryGeneratedColumn("uuid")
   id: string;
-
-  @Column()
-  partner: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -26,4 +23,12 @@ export default class Dialogs {
   @ManyToOne(() => Users, (user) => user.dialogs)
   @JoinColumn({ name: "author_id" })
   author: Users;
+
+  @ManyToOne(() => Users, (user) => user.partner)
+  @JoinColumn({ name: "partner_id" })
+  partner: Users;
+
+  @ManyToOne(() => Messages, (message) => message.dialog)
+  @JoinColumn({ name: "last_message" })
+  lastMessage: Messages;
 }

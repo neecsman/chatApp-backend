@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
-import { Users } from "./index";
+import { Users, Dialogs } from "./index";
 
 @Entity()
 export default class Messages {
@@ -13,24 +15,22 @@ export default class Messages {
   id: string;
 
   @Column()
-  partner: string;
-
-  @Column()
   text: string;
 
-  @Column()
-  dialog: string;
+  @Column({ default: false })
+  read: boolean;
 
-  @Column()
-  unread: boolean;
-
-  @Column()
+  @CreateDateColumn()
   created_at: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updated_at: Date;
 
   @ManyToOne(() => Users, (user) => user.messages)
   @JoinColumn({ name: "user_id" })
-  user: Users;
+  user: string;
+
+  @ManyToOne(() => Dialogs, (dialog) => dialog.lastMessage)
+  @JoinColumn({ name: "dialog_id" })
+  dialog: Dialogs;
 }

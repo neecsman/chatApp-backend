@@ -18,7 +18,7 @@ export default class Users {
   @Column({ unique: true })
   email: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ default: "", name: "avatar_path" })
@@ -27,21 +27,33 @@ export default class Users {
   @Column()
   fullname: string;
 
-  @Column({ default: false, name: "is_verified" })
-  isVerified: boolean;
+  @Column({ default: "", name: "activation_link" })
+  activationLink: string;
 
-  @Column({ default: false, name: "is_verified_hash" })
-  isVerifiedHash: boolean;
+  @Column({ default: false, name: "is_activated" })
+  isActivated: boolean;
+
+  @Column({ default: false })
+  confirmed: boolean;
+
+  @Column({ default: false, name: "confirm_hash" })
+  confirmHash: boolean;
+
+  @Column({ default: new Date() })
+  last_seen: Date;
 
   @CreateDateColumn()
   created_at: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @OneToMany(() => Messages, (msg) => msg.user)
+  @OneToMany(() => Messages, (message) => message.user)
+  @JoinColumn()
   messages: Messages[];
 
   @OneToMany(() => Dialogs, (dialog) => dialog.author)
+  @JoinColumn()
   dialogs: Dialogs[];
+
+  @OneToMany(() => Dialogs, (dialog) => dialog.partner)
+  @JoinColumn()
+  partner: Dialogs[];
 }

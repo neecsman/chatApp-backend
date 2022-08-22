@@ -1,9 +1,9 @@
 import express from "express";
 import { AppDataSource } from "../data-source";
-import { Dialogs, Users } from "../entity";
+import { Dialogs } from "../entity";
 
 class DialogsController {
-  async createDialogs(req: express.Request, res: express.Response) {
+  async create(req: express.Request, res: express.Response) {
     const postData = {
       author: req.body.author,
       partner: req.body.partner,
@@ -13,6 +13,7 @@ class DialogsController {
 
     dialog.partner = postData.partner;
     dialog.author = postData.author;
+
     await AppDataSource.manager
       .save(dialog)
       .then((dialog) => {
@@ -23,61 +24,39 @@ class DialogsController {
       });
   }
 
-  // async getDialogs(req: express.Request, res: express.Response) {
-  //   const user = req.params.id;
-  //   await AppDataSource.getRepository(Dialogs)
-  //     .createQueryBuilder("dialogs")
-  //     .where("user_id = :id", { id: user })
-  //     .getMany()
-  //     .then((dialogs) => {
-  //       res.json(dialogs);
-  //     })
-  //     .catch(() => {
-  //       res.status(404).json({
-  //         message: "Dialogs not found",
-  //       });
-  //     });
-  // }
-
-  async getDialogs(req: express.Request, res: express.Response) {
+  async get(req: express.Request, res: express.Response) {
     const user = req.params.id;
     await AppDataSource.getRepository(Dialogs)
       .createQueryBuilder("dialogs")
-      // .leftJoinAndSelect("dialogs.author", "users", "users.id = :userId", {
-      //   userId: user,
-      // })
-      .leftJoinAndSelect(
-        Dialogs,
-        "partner",
-        "users.id = d6f668e0-6426-4d97-a368-c6a57858b1a3"
-      )
-      // .where("dialogs.author.id = :id", { id: user })
+      .leftJoinAndSelect("dialogs.author", "author")
+      .leftJoinAndSelect("dialogs.partner", "partner")
+      .where("dialogs.author.id = :id", { id: user })
       .getMany()
       .then((dialogs) => {
         res.json(dialogs);
       })
-      .catch((err) => {
+      .catch(() => {
         res.status(404).json({
           message: "Dialogs not found",
-          err,
         });
       });
   }
 
-  async deleteDialog(req: express.Request, res: express.Response) {
+  async delete(req: express.Request, res: express.Response) {
     const id = req.params.id;
     const dialogsRepository = AppDataSource.getRepository(Dialogs);
     const dealogToRemove = await dialogsRepository.findOneBy({ id: id });
     await dialogsRepository
       .remove(dealogToRemove)
-      .then((dialog) => {
+      .then(() => {
         res.json({
-          message: `Dialog with ${dialog.partner} deleted`,
+          message: `Dialog deleted`,
         });
       })
-      .catch(() => {
+      .catch((e) => {
         return res.status(404).json({
           message: "Dialog not found",
+          e,
         });
       });
   }
