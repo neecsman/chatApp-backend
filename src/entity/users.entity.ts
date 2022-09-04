@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  OneToOne,
   JoinColumn,
 } from "typeorm";
 
@@ -41,6 +42,9 @@ export default class Users {
 
   @Column({ default: new Date() })
   last_seen: Date;
+
+  @Column({ default: "", name: "refresh_token" })
+  refreshToken: string;
 
   @CreateDateColumn()
   created_at: Date;

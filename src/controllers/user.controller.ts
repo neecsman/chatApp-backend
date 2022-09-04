@@ -54,6 +54,11 @@ class UserController {
     next: NextFunction
   ) {
     try {
+      const { refreshToken } = req.cookies;
+      const userService = new UserService();
+      const token = userService.logout(refreshToken);
+      res.clearCookie("refreshToken");
+      return res.json(token);
     } catch (error) {
       next(error);
     }
@@ -80,6 +85,14 @@ class UserController {
     next: NextFunction
   ) {
     try {
+      const { refreshToken } = req.cookies;
+      const userService = new UserService();
+      const userData = await userService.refresh(refreshToken);
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.json(userData);
     } catch (error) {
       next(error);
     }

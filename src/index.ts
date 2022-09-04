@@ -3,7 +3,7 @@ import express from "express";
 import router from "./router";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { updateLastSeen, errorMiddleware } from "./middlewares";
+import { updateLastSeen, errorMiddleware, authMiddleware } from "./middlewares";
 
 const app = express();
 const PORT = process.env.PORT;
