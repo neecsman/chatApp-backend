@@ -1,11 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { ErrorService, TokenService } from "../service";
 import { IRequestWithUser } from "../interfaces";
-export default function (
-  req: IRequestWithUser,
-  res: Response,
-  next: NextFunction
-) {
+export default function (req: Request, res: Response, next: NextFunction) {
   try {
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
@@ -23,8 +19,6 @@ export default function (
     if (!userData) {
       return next(ErrorService.UnauthorizedError());
     }
-
-    req.user.id = userData.id;
 
     next();
   } catch (error) {

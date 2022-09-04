@@ -18,7 +18,7 @@ const User = new UserController();
 const Dialogs = new DialogsController();
 const Messages = new MessagesController();
 
-router.get("/user/:id", User.get);
+// router.get("/user/:id", User.get);
 router.delete("/user/:id", User.delete);
 router.post(
   "/user/registration",
@@ -31,39 +31,12 @@ router.post("/user/logout", User.logout);
 router.get("/user/activate/:link", User.activate);
 router.get("/user/refresh", User.refresh);
 
-router.get(
-  "/dialogs/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const authorizationHeader = req.headers.authorization;
-      if (!authorizationHeader) {
-        return next(ErrorService.UnauthorizedError());
-      }
+router.get("/dialogs/:id", authMiddleware, Dialogs.get);
+router.post("/dialogs", authMiddleware, Dialogs.create);
+router.delete("/dialogs/:id", authMiddleware, Dialogs.delete);
 
-      const accessToken = authorizationHeader.split(" ")[1];
-
-      if (!accessToken) {
-        return next(ErrorService.UnauthorizedError());
-      }
-
-      const userData = TokenService.validateAccessToken(accessToken);
-
-      if (!userData) {
-        return next(ErrorService.UnauthorizedError());
-      }
-
-      next();
-    } catch (error) {
-      return next(ErrorService.UnauthorizedError());
-    }
-  },
-  Dialogs.get
-);
-router.post("/dialogs", Dialogs.create);
-router.delete("/dialogs/:id", Dialogs.delete);
-
-router.get("/messages", Messages.get);
-router.post("/messages", Messages.create);
-router.delete("/messages/:id", Messages.delete);
+router.get("/messages", authMiddleware, Messages.get);
+router.post("/messages", authMiddleware, Messages.create);
+router.delete("/messages/:id", authMiddleware, Messages.delete);
 
 export default router;

@@ -26,6 +26,7 @@ class DialogsController {
 
   async get(req: express.Request, res: express.Response) {
     const user = req.params.id;
+
     await AppDataSource.getRepository(Dialogs)
       .createQueryBuilder("dialogs")
       .leftJoinAndSelect("dialogs.author", "author")

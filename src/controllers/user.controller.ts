@@ -84,8 +84,11 @@ class UserController {
     res: express.Response,
     next: NextFunction
   ) {
+    console.log("ok");
+
     try {
       const { refreshToken } = req.cookies;
+
       const userService = new UserService();
       const userData = await userService.refresh(refreshToken);
       res.cookie("refreshToken", userData.refreshToken, {

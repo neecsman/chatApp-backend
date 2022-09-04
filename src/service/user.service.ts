@@ -102,7 +102,9 @@ class UserService {
     const user = AppDataSource.getRepository(Users).findOneBy({
       refreshToken,
     });
+
     const userDto = new UserDto(user);
+
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
