@@ -22,8 +22,8 @@ const Messages = new MessagesController();
 router.delete("/user/:id", User.delete);
 router.post(
   "/user/registration",
-  body("email").isEmail(),
-  body("password").isLength({ min: 6, max: 32 }),
+  // body("email").isEmail(),
+  // body("password").isLength({ min: 6, max: 32 }),
   User.registration
 );
 router.post("/user/login", User.login);
