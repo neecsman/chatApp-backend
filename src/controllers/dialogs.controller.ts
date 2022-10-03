@@ -1,7 +1,7 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { AppDataSource } from "../data-source";
 import { Dialogs } from "../entity";
-
+import DialogsService from "../service/dialolgs.service";
 class DialogsController {
   async create(req: express.Request, res: express.Response) {
     const postData = {
@@ -24,23 +24,20 @@ class DialogsController {
       });
   }
 
-  async get(req: express.Request, res: express.Response) {
-    const user = req.params.id;
+  async get(req: express.Request, res: express.Response, next: NextFunction) {
+    // const user = req.params.id;
+    console.log("dialogs");
 
-    await AppDataSource.getRepository(Dialogs)
-      .createQueryBuilder("dialogs")
-      .leftJoinAndSelect("dialogs.author", "author")
-      .leftJoinAndSelect("dialogs.partner", "partner")
-      .where("dialogs.author.id = :id", { id: user })
-      .getMany()
-      .then((dialogs) => {
-        res.json(dialogs);
-      })
-      .catch(() => {
-        res.status(404).json({
-          message: "Dialogs not found",
-        });
-      });
+    try {
+      const { refreshToken } = req.cookies;
+      const dialogService = new DialogsService();
+
+      const dialogs = await dialogService.getDialogs(refreshToken);
+      console.log(dialogs);
+      res.json(dialogs);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async delete(req: express.Request, res: express.Response) {

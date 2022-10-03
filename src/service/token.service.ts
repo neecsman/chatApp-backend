@@ -6,7 +6,7 @@ import { IToken } from "../interfaces";
 class TokenService {
   generateTokens(payload: any) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: "30s",
+      expiresIn: "15m",
     });
     const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
       expiresIn: "30d",
@@ -42,9 +42,6 @@ class TokenService {
   }
 
   async saveToken(userId: string, refreshToken: string) {
-    // const tokenData = await AppDataSource.getRepository(Token).findOneBy({
-    //   user: userId,
-    // });
     const userData = await AppDataSource.getRepository(Users).findOneBy({
       id: userId,
     });
@@ -58,12 +55,6 @@ class TokenService {
         .execute();
     }
     console.log(userData);
-
-    //TODO сделать апдейт токена (вылетала ошибка дупликата значения) при логине
-    // return await AppDataSource.getRepository(Users).save({
-    //   user: userId,
-    //   refreshToken,
-    // });
   }
 
   async removeToken(refreshToken: string) {

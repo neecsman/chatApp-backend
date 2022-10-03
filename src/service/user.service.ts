@@ -29,7 +29,7 @@ class UserService {
     user.activationLink = activationLink;
 
     await AppDataSource.manager.save(user);
-    // await MailService.sendActivationMail(email, activationLink);
+    await MailService.sendActivationMail(email, activationLink);
 
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({ ...userDto });
@@ -59,8 +59,6 @@ class UserService {
     const user = await AppDataSource.getRepository(Users).findOneBy({
       email,
     });
-
-    console.log(user);
 
     if (!user) {
       throw ErrorService.BadRequest("Пользователь не был найден...");
@@ -94,17 +92,18 @@ class UserService {
     }
 
     const userData = tokenService.validateRefreshToken(refreshToken);
+
     const tokenFromDb = await tokenService.findToken(refreshToken);
 
     if (!userData || !tokenFromDb) {
       throw ErrorService.UnauthorizedError();
     }
-    const user = AppDataSource.getRepository(Users).findOneBy({
-      refreshToken,
+    const user = await AppDataSource.getRepository(Users).findOneBy({
+      id: userData.id,
     });
 
     const userDto = new UserDto(user);
-
+    console.log(userDto);
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
