@@ -1,6 +1,6 @@
 import express from "express";
 import { AppDataSource } from "../data-source";
-import { Messages } from "../entity";
+import { Messages, Dialogs } from "../entity";
 
 class MessagesController {
   async get(req: express.Request, res: express.Response) {
@@ -25,11 +25,10 @@ class MessagesController {
   }
 
   async create(req: express.Request, res: express.Response) {
-    const userId = "e0265792-3624-47bf-bdb2-d6278eb0d7b3";
     const postData = {
       text: req.body.text,
-      dialog: req.body.dialog_id,
-      user: userId,
+      dialog: req.body.dialogId,
+      user: req.body.userId,
     };
 
     const message = new Messages();
@@ -46,7 +45,14 @@ class MessagesController {
       .catch((err) => {
         res.json(err);
       });
+
+    await AppDataSource.createQueryBuilder()
+      .update(Dialogs)
+      .set({ lastMessages: postData.text })
+      .where("id = :id", { id: postData.dialog })
+      .execute();
   }
+
   async delete(req: express.Request, res: express.Response) {
     const id = req.params.id;
     const messageRepository = AppDataSource.getRepository(Messages);

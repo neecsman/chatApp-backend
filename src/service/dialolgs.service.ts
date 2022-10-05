@@ -11,6 +11,7 @@ class DialogsService {
       .leftJoinAndSelect("dialogs.author", "author")
       .leftJoinAndSelect("dialogs.partner", "partner")
       .where("dialogs.author.id = :id", { id: userData.id })
+      .orWhere("dialogs.partner.id = :id", { id: userData.id })
       .getMany();
 
     return dialogs;

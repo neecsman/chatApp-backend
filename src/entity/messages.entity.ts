@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  ManyToMany,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -20,6 +21,9 @@ export default class Messages {
   @Column({ default: false })
   read: boolean;
 
+  // @Column({ name: "dialog_id", default: "" })
+  // dialog: string;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -30,7 +34,9 @@ export default class Messages {
   @JoinColumn({ name: "user_id" })
   user: string;
 
-  @ManyToOne(() => Dialogs, (dialog) => dialog.lastMessage)
+  // @ManyToOne(() => Dialogs, (dialog) => dialog.lastMessage)
+
+  @ManyToOne(() => Dialogs, (dialog) => dialog.messages)
   @JoinColumn({ name: "dialog_id" })
   dialog: Dialogs;
 }

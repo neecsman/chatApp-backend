@@ -29,7 +29,7 @@ class UserService {
     user.activationLink = activationLink;
 
     await AppDataSource.manager.save(user);
-    await MailService.sendActivationMail(email, activationLink);
+    // await MailService.sendActivationMail(email, activationLink);
 
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({ ...userDto });

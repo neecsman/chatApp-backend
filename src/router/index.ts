@@ -26,13 +26,17 @@ router.post("/user/login", User.login);
 router.post("/user/logout", User.logout);
 router.get("/user/activate/:link", User.activate);
 router.get("/user/refresh", User.refresh);
+router.get("/user/all", User.getAll);
 
-router.get("/dialogs", authMiddleware, Dialogs.get);
-router.post("/dialogs", authMiddleware, Dialogs.create);
-router.delete("/dialogs/:id", authMiddleware, Dialogs.delete);
+router.get("/dialogs", Dialogs.get);
+router.post("/dialogs", Dialogs.create);
+router.delete("/dialogs/:id", Dialogs.delete);
 
-router.get("/messages", authMiddleware, Messages.get);
-router.post("/messages", authMiddleware, Messages.create);
-router.delete("/messages/:id", authMiddleware, Messages.delete);
+router.get("/messages", Messages.get);
+router.post("/messages", Messages.create);
+router.delete("/messages/:id", Messages.delete);
+// router.get("/messages", authMiddleware, Messages.get);
+// router.post("/messages", authMiddleware, Messages.create);
+// router.delete("/messages/:id", authMiddleware, Messages.delete);
 
 export default router;

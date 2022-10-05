@@ -19,7 +19,6 @@ export default function (req: Request, res: Response, next: NextFunction) {
     if (!userData) {
       return next(ErrorService.UnauthorizedError());
     }
-
     next();
   } catch (error) {
     return next(ErrorService.UnauthorizedError());

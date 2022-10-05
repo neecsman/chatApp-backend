@@ -119,6 +119,17 @@ class UserController {
       });
   }
 
+  async getAll(req: express.Request, res: express.Response) {
+    await AppDataSource.getRepository(Users)
+      .find()
+      .then((users) => res.json(users))
+      .catch(() => {
+        res.status(404).json({
+          message: "Users not found",
+        });
+      });
+  }
+
   async create(req: express.Request, res: express.Response) {
     const postData = {
       email: req.body.email,
