@@ -103,7 +103,6 @@ class UserService {
     });
 
     const userDto = new UserDto(user);
-    console.log(userDto);
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await TokenService.saveToken(userDto.id, tokens.refreshToken);

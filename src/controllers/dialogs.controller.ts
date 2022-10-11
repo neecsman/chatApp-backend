@@ -25,15 +25,11 @@ class DialogsController {
   }
 
   async get(req: express.Request, res: express.Response, next: NextFunction) {
-    // const user = req.params.id;
-    console.log("dialogs");
-
     try {
       const { refreshToken } = req.cookies;
       const dialogService = new DialogsService();
 
       const dialogs = await dialogService.getDialogs(refreshToken);
-      console.log(dialogs);
       res.json(dialogs);
     } catch (error) {
       next(error);

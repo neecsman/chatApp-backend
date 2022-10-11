@@ -54,7 +54,6 @@ class TokenService {
         .where("id = :id", { id: userId })
         .execute();
     }
-    console.log(userData);
   }
 
   async removeToken(refreshToken: string) {

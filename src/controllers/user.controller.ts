@@ -17,7 +17,6 @@ class UserController {
           ErrorService.BadRequest("Ошибка при валидации", errors.array())
         );
       }
-      console.log(req.body);
 
       const { email, password, fullname } = req.body;
       const userService = new UserService();
@@ -86,13 +85,8 @@ class UserController {
     res: express.Response,
     next: NextFunction
   ) {
-    console.log("ok");
-
     try {
       const { refreshToken } = req.cookies;
-
-      console.log(refreshToken);
-
       const userService = new UserService();
       const userData = await userService.refresh(refreshToken);
       res.cookie("refreshToken", userData.refreshToken, {
